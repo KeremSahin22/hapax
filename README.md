@@ -1,4 +1,4 @@
 # copying
 
-Website for https://copying.baulab.info/
+Website for https://hapax.baulab.info/
 
