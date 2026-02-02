@@ -3,13 +3,16 @@
 <head>
 <title>In-Context Learning Without Copying</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="description" content="Addressing bias, copyright, and offensive content in diffusion models by directly calculating parameter changes." />
+<meta name="description" content="HAPAX: A training regime that suppresses inductive copying while preserving abstractive in-context learning capabilities in transformers." />
 <meta property="og:title" content="In-Context Learning Without Copying" />
-<meta property="og:description" content="Addressing bias, copyright, and offensive content in diffusion models by directly calculating parameter changes." />
+<meta property="og:url" content="https://hapax.baulab.info/" />
+<meta property="og:image" content="https://hapax.baulab.info/images/hapax-thumb.png" />
+<meta property="og:description" content="Induction heads are not a necessary prerequisite for abstractive in-context learning. HAPAX training reveals that these capabilities can emerge independently.">
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" /> 
 <meta name="twitter:title" content="In-Context Learning Without Copying" />
-<meta name="twitter:description" content="Addressing bias, copyright, and offensive content in diffusion models by directly calculating parameter changes." />
+<meta name="twitter:description" content="Induction heads are not a necessary prerequisite for abstractive in-context learning. HAPAX training reveals that these capabilities can emerge independently." />
+<meta name="twitter:image" content="https://hapax.baulab.info/images/hapax-thumb.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
@@ -41,6 +44,26 @@
 :target {
   background-color: yellow;
 }
+.citation {
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.citation img {
+  float: left;
+  width: 150px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+}
+.citation a {
+  font-weight: bold;
+}
+.citation::after {
+  content: "";
+  display: table;
+  clear: both;
+}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD12LWN557"></script>
 <script>
@@ -66,19 +89,18 @@ gtag('js', new Date()); gtag('config', 'G-FD12LWN557');
   <nobr><a href="https://www.jannikbrinkmann.com/" target="_blank"
   >Jannik Brinkmann</a><sup>2</sup>,</nobr>
   <nobr><a href="https://aaronmueller.github.io/" target="_blank"
-  >Aaron Mueller</a><sup>3</sup></nobr>
+  >Aaron Mueller</a><sup>3</sup>,</nobr>
   <nobr><a href="https://baulab.info/" target="_blank"
   >David Bau</a><sup>1</sup>,</nobr>
   <nobr><a href="https://wendlerc.github.io/" target="_blank"
-  >Chris Wendler</a><sup>1</sup>,</nobr>
+  >Chris Wendler</a><sup>1</sup></nobr>
  <br>
   <nobr><sup>1</sup><a href="https://khoury.northeastern.edu/" target="_blank"
   >Northeastern University</a>,</nobr>
-  <nobr><sup>2</sup><a href="https://cs.technion.ac.il/" target="_blank"
-  >University of Mannheim</a></nobr>;
-  <nobr><sup>3</sup><a href="https://www.csail.mit.edu/" target="_blank"
+  <nobr><sup>2</sup><a href="https://www.uni-mannheim.de/" target="_blank"
+  >University of Mannheim</a>,</nobr>
+  <nobr><sup>3</sup><a href="https://www.bu.edu/cs/" target="_blank"
   >Boston University</a></nobr>
-
 </address>
  </div>
 </div><!-- end nd-pageheader -->
@@ -87,26 +109,18 @@ gtag('js', new Date()); gtag('config', 'G-FD12LWN557');
 <div class="row justify-content-center text-center">
 
 <p>
-<a href="https://arxiv.org/pdf/2308.14761.pdf" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/paper-thumb.png" style="border:1px solid; margin: 0 38px;" alt="ArXiv Preprint thumbnail" data-nothumb=""><br>ArXiv<br>Preprint</a>
-<a href="https://github.com/rohitgandikota/unified-concept-editing" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/code-thumb.png" style="border:1px solid; margin: 0 38px;" alt="Github code thumbnail" data-nothumb=""><br>Source Code<br>Github</a>
-<!-- <a href="https://unified.baulab.info/weights/uce_models/" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/data-thumb.png" style="border:1px solid; margin: 0 38px;" alt="Data thumbnail" data-nothumb=""><br>Fine-Tuned<br>Model  Weights</a> -->
-<!-- <a href="https://huggingface.co/spaces/baulab/Erasing-Concepts-In-Diffusion" class="d-inline-block p-3 align-bottom" target="_blank"><img height="78" width="104" src="images/demo3x4-thumb.png" style="border:1px solid" alt="Huggingface demo thumbnail" data-nothumb=""><br>Huggingface<br>Demo</a> -->
+<a href="https://arxiv.org/abs/2511.05743" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/paper-thumb.png" style="border:1px solid; margin: 0 38px;" alt="ArXiv Preprint thumbnail" data-nothumb=""><br>ArXiv<br>Preprint</a>
+<a href="https://github.com/KeremSahin22/icl-without-copying" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/code-thumb.png" style="border:1px solid; margin: 0 38px;" alt="Github code thumbnail" data-nothumb=""><br>Source Code<br>Github</a>
 </p>
 
 <div class="card" style="max-width: 1020px;">
 <div class="card-block">
-<h3>How to fix multiple issues with diffusion model weights?</h3>
+<h3>Are Induction Heads Necessary for In-Context Learning?</h3>
 <p>
-<p>
-Text-to-image models suffer from various safety issues that may limit their suitability for deployment.
-Previous methods have separately addressed individual issues of bias, copyright, and offensive content in text-to-image models. However, in the real world, all of these issues appear simultaneously in the same model.
-
+<b>Induction heads</b> are attention heads that perform inductive copying by matching patterns from earlier context and copying their continuations verbatim. As models develop induction heads, they experience a sharp drop in training loss, a phenomenon cited as evidence that induction heads may underlie a wide range of in-context learning (ICL) capabilities. 
 </p>
 <p>
-In this paper, we present a method that tackles those diverse issues with a single approach. 
-  Our method, Unified Concept Editing (UCE), edits the model without training using <b>a closed-form solution conditioned on cross attention outputs</b>, and scales seamlessly to concurrent edits on text-conditional diffusion models.
-UCE enables direct editing of concepts based on phrases and attributes without use of new training data, supporting rapid iteration.
-Key advantages versus finetuning approaches include: efficient scaling of editing multiple concepts, precise concept changes through direct modification of model weights, avoidance of interference with protected or unrelated concepts, and rapid iteration from fast closed-form editing
+In this work, we investigate whether induction heads are a necessary building block for learning <b>abstractive ICL capabilities</b> (i.e., tasks where the answer is not contained in the input context), or whether such capabilities can emerge independently. We propose <b>HAPAX</b>, a training regime that omits the loss contribution of tokens predictable by induction heads. Despite a significant reduction in inductive copying, abstractive ICL capabilities are preserved, with the model achieving higher accuracy than the vanilla model on 13 out of 21 tasks, even though 31.7% of tokens are omitted from the loss. Furthermore, our model achieves lower loss values on token positions that induction heads cannot predict. Mechanistic analysis shows that models trained with Hapax develop fewer and weaker induction heads despite preserving abstractive ICL capabilities. Our findings suggest that the developmental link between induction heads and abstractive ICL capabilities is <b>weaker than previously hypothesized</b>.
 </p>
 </div><!--card-block-->
 </div><!--card-->
@@ -115,136 +129,275 @@ Key advantages versus finetuning approaches include: efficient scaling of editin
   
 <div class="row">
 <div class="col">
-  
+
+<h2>Background: The Induction Circuit</h2>
+
 <figure class="center_image" style="margin-top: 30px">
-  <center><img src="images/paper/intro.png" style="width:100%; max-width:800px"></center>
-  <figcaption>In a unified way, UCE can debias, erase and moderate concepts in diffusion models. Unlike previous model editing methods that address each application individually, our method can simultaneously edit multiple concepts with minimal interference
+  <center><img src="images/paper/induction_circuit.png" style="width:100%; max-width:900px"></center>
+  <figcaption>
+    <b>The Induction Circuit.</b> Previous token heads allow each token to store which token came before it. Induction heads then perform a match-and-copy operation to reproduce subsequences that appeared earlier in the context.
   </figcaption>
 </figure>
 
-  <h2> Why debias/erase/moderate concepts from diffusion models? </h2>
-  <p>Since large-scale models like Stable Diffusion are trained on massive datasets, they often learn concerning capabilities like generating nudity 
-    or imitating styles/content without permission. This has created risks: Stable Diffusion can be used 
-    to <a href="https://www.washingtonpost.com/technology/2023/02/13/ai-porn-deepfakes-women-consent/">generate nonconsensual deepfake porn</a>, 
-    <a href="https://www.washingtonpost.com/comics/2023/02/14/ai-in-illustration/">mimic artists' work</a>, 
-    <a href="https://www.theverge.com/2023/2/6/23587393/ai-art-copyright-lawsuit-getty-images-stable-diffusion">reproduce copyrighted/trademarked content</a>, and
-    <a href="https://www.bloomberg.com/graphics/2023-generative-ai-bias/">amplify stereotypes about race and gender</a>.
-   Such issues pose serious challenges for institutions releasing models. </p>
-  <p>   
-  There are methods that address these concerns separately, but they do not scale well to editing multiple concepts together. 
-    We propose a closed-form solution that can address these challenges in a unified way at scale, editing multiple concepts concurrently with minimal interference.
-  </p>
-  
-<h2> How to edit concepts simultaneously in diffusion models? </h2>
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/method.png" style="width:100%; max-width:600px"></center>
-    <figcaption> We update the weights of cross attention linear layers in closed-form by conditioning its outputs for the concepts to edit and preserve. Our method, UCE, does not require any training data collection or any gradient descent. UCE can debias, erase, and moderate concepts together in a single edit and scales to editing multiple concepts while minimizing interference with unedited concepts.
-    </figcaption>
-  </figure>
-  <p>We edit the cross attention weights by conditioning new target output for the concept embeddings to edit and preserve the previoud outputs for concepts to preserve. We minimize the loss shown in the figure above through this closed-form update:
-  </p>
-  <center><img src="images/paper/uce_closed.png" style="width:500px;padding-bottom:10px;"></center>
-  <p> Our method generalizes previous state-of-the-art model editing methods like <a href="https://arxiv.org/pdf/2303.08084.pdf">TIME</a> and 
-    <a href="https://openreview.net/pdf?id=MkbcAHIYgyS">MEMIT</a>. Our method can also be generalised to editing any linear projection.</p>
-<h2> Erasing an artistic style</h2>
-  <p>Models like Stable Diffusion can mimic <a href="https://proximacentaurib.notion.site/About-Image-Synthesis-Style-Studies-4dcbd554f4b0403d802dc5b26fb3b8e9">the styles of more than 1500 artists</a>. Not all artists are excited about their art being mimicked by genrative models and wish to be opted-out of these models' vocubulary.
-  Recent works have been working on <a href="https://spawning.ai">filtering the training data</a> to accomodate the opt-out requests from individuals. Eventhough such filtering would exclude the artists from future models that are trained on the filtered dataset, model editing may still be needed for certain artists that aren't fully addressed. We propose using UCE that is scalable, fast, and displays minimal interference with other artists. 
-  To erase style, we use the name of the artist and steer them towards general prompts like "art" or "".</p>
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/style1.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Erasing 1 artist. On left, we show the original vs edited for the intended erasure. On the right, we show the interference with unerased artists. We find that our method efficiently erases while having the least inteference.
-    </figcaption>
-  </figure>
+<p>
+Previous work showed that LLMs develop <b>induction heads</b> that perform inductive copying by matching patterns and copying them from earlier context. Induction circuits consist of three steps:
+</p>
+<ol>
+  <li><b>Previous token heads</b> allow each token to store which token came before it</li>
+  <li><b>Induction heads</b> attend to the previous token information in earlier contexts, resulting in a "prefix-matching" attention pattern</li>
+  <li>The induction head increases the probability of the attended token in the output</li>
+</ol>
 
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/style2.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Erasing 5 artists at a time. On left, we show the original vs edited for the intended erasure. On the right, we show the interference with unerased artists. We find that our method efficiently erases while having the least inteference.
-    </figcaption>
-  </figure>
+<p>
+Formally, given input tokens (x<sub>1</sub>, ..., x<sub>j</sub>), induction circuits operate by searching for tokens that hold information of the current token x<sub>j</sub> (i.e., searching x<sub>i+1</sub> where x<sub>i</sub> = x<sub>j</sub>, i &lt; j). If there is a matching x<sub>i+1</sub>, the induction head increases the logit of x<sub>i+1</sub> for the next prediction.
+</p>
 
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/style3.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Erasing 10 artists at a time. On left, we show the original vs edited for the intended erasure. On the right, we show the interference with unerased artists. We find that our method efficiently erases while having the least inteference.
-    </figcaption>
-  </figure>
 
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/style4.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Erasing 50 artists at a time. On left, we show the original vs edited for the intended erasure. On the right, we show the interference with unerased artists. We find that our method efficiently erases while having the least inteference.
-    </figcaption>
-  </figure>
-<h2> Debiasing a profession across gender and race</h2>
-  <p> Previous debiasing methods address only dual attributed biases, however, attributes like race are multi-faceted. We propose a multi-faceted debiasing formulation that can be scaled for multiple concepts. Our method has strong debiasing results, improving the race and gender representation in diffusion models.
-  <center><img src="images/paper/debias_equation.png" style="width:500px;padding-bottom:10px;"></center>
-    <p>This formulation allows UCE to address multi-attribute biases like race. We show some quantitative results of our method displaying improved race and gender diversity.</p>
-    <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/gender1.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Our method improves gender representation for professions in diffusion models.
-    </figcaption>
-  </figure>
-  
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/gender2.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Our method improves gender representation for professions in diffusion models.
-    </figcaption>
-  </figure>
-  
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/gender3.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Our method improves gender representation for professions in diffusion models.
-    </figcaption>
-  </figure>
 
-   
- <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/race1.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Our method improves race representation for professions in diffusion models.
-    </figcaption>
-  </figure>
+<p>
+Olsson et al. (2022) hypothesized that these circuits underlie a wide range of in-context learning capabilities. However, subsequent work has demonstrated that induction heads operate in parallel with different components that are more causally important for performance on various ICL tasks. Yin et al. (2025) provide correlational evidence that induction heads transform into other ICL-related heads during training, but it is not clear whether abstractive ICL capabilities can emerge independently from induction heads. This motivates our central question: <b>are induction heads a necessary building block for learning abstractive ICL capabilities, or can such capabilities emerge independently?</b>
+</p>
 
-   
- <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/race2.png" style="width:100%; max-width:800px"></center>
-    <figcaption> Our method improves race representation for professions in diffusion models.
-    </figcaption>
-  </figure>
+<h2>The HAPAX Training Regime</h2>
 
-<h2> Moderating an unsafe concept</h2>
-  <p>We test our method on moderating unsafe concepts like <i>"nudity"</i>. We compare our method with <a href="https://erasing.baulab.info">ESD-u and ESD-x</a>. We find that our method has similar performance as ESD-x when erasing a single concept, but our method shows minimal interference with other concepts in the model. 
-  We also see that moderating multiple unsafe concepts like <i>"harm, violence, child abuse, blood, nudity"</i>, our method shows a stronger moderation effect on the model as seen in the figure below.</p>
-  <figure class="center_image" style="margin-top: 30px">
-    <center><img src="images/paper/nudity_bar.png" style="width:100%; max-width:800px"></center>
-    <figcaption> We show the percentage reduction in unsafe nudity samples compared to Original SD as classified by <a href="https://github.com/notAI-tech/NudeNet">Nudenet</a>. We find that our method has a superior performance when moderating multiple unsafe concepts.
-    </figcaption>
-  </figure>
-  
+<figure class="center_image" style="margin-top: 30px">
+  <center><img src="images/paper/bigram_loss_masking.png" style="width:600px; max-width:700px"></center>
+  <figcaption>
+    <b>HAPAX Training.</b> Positions predictable by induction heads (gray) do not contribute to the loss. This reduces the incentive to learn inductive copying while still exposing the model to natural language structure.
+  </figcaption>
+</figure>
+
+<p>
+To suppress inductive copying, we apply loss masking to create a training regime where tokens that can be correctly predicted by induction heads are excluded from the loss calculation. Specifically, we mask the loss contributions of token positions that contain a matching n-gram within the same context window (where n &gt; 1). Single-token repetitions are not masked because they cannot be predicted by induction. Thus, the first token of any repeated n-gram is left unmasked.
+</p>
+
+
+
+<p>
+We train Vanilla and HAPAX 1B models from scratch using the GPT-NeoX architecture with the same hyperparameter and training configuration as the Pythia models. We use the Pile dataset for training. The training data consists of 40B tokens, of which 12.7B (31.7%) tokens are masked for the HAPAX model due to loss masking. This means the HAPAX model never receives gradient signals from repeated n-grams. Since tokens with high representational similarity (e.g., "National" and "_National") can still provide a copying signal, we also train a stricter variant, <b>Thresholded-HAPAX</b>, that additionally masks such tokens (52.5% of tokens masked).
+</p>
+
+<h2>Suppression of Inductive Copying</h2>
+
+<figure class="center_image" style="margin-top: 30px">
+  <center><img src="images/paper/random_repetition_clean_1b_vs_masked_bigram_loss_1b_thresh0.3_eq.png" style="width:400px; max-width:600px"></center>
+  <figcaption>
+    <b>Repetition Performance.</b> HAPAX models struggle with repeating random token sequences, a task solvable only through induction circuits. The vanilla model achieves high accuracy while HAPAX shows a 66% drop, and Thresholded-HAPAX shows an 89% drop.
+  </figcaption>
+</figure>
+
+<p>
+We first measure random repetition performance: the model is given 1000 sequences of random repeated tokens r<sub>1</sub>r<sub>2</sub>...r<sub>s</sub>r<sub>1</sub>r<sub>2</sub>...r<sub>s-1</sub> and is expected to predict r<sub>s</sub>. This synthetic task does not occur in natural language but is solvable through induction heads. The HAPAX model experiences a <b>66% drop</b> and Thresholded-HAPAX experiences an <b>89% drop</b> in accuracy relative to the vanilla model at the end of training.
+</p>
+
+<p>
+We evaluate HAPAX on 28 extractive tasks from Todd et al. (2024). Of the 24 tasks with statistically significant differences, 23 show reduced performance. The results confirm that the HAPAX training regime effectively reduces inductive copying.
+</p>
+
+<h2>Preservation of Abstractive ICL Capabilities</h2>
+
+
+<figure class="center_image" style="margin-top: 30px">
+  <center><img src="images/paper/clean_1b_vs_masked_bigram_loss_1b_thresh03_eq_vs_masked_bigram_loss_1b_19900_5-shot.png" style="width:500px; max-width:800px"></center>
+  <figcaption>
+    <b>Translation Performance.</b> Word-level translation (into English) across 8 languages. HAPAX models preserve performance on this abstractive task. Interestingly, for translation tasks, Thresholded-HAPAX achieves higher accuracy than HAPAX and the vanilla model on all but one task.
+  </figcaption>
+</figure>
+
+<figure class="center_image" style="margin-top: 30px; width: 100%;">
+  <center>
+  <div style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;">
+    
+    <table style="font-size: 0.7em; border-collapse: collapse;">
+      <caption style="caption-side: top; text-align: left; margin-bottom: 10px;"><b>Abstractive ICL (5-Shot)</b></caption>
+      <thead>
+        <tr style="border-bottom: 2px solid #333;">
+          <th style="padding: 3px 5px; text-align: left;">Task</th>
+          <th style="padding: 3px 5px; text-align: center;">Van.</th>
+          <th style="padding: 3px 5px; text-align: center;">HAP.</th>
+          <th style="padding: 3px 5px; text-align: center;">Thr.</th>
+          <th style="padding: 3px 5px; border-left: 1px solid #ccc; text-align: left;">Task</th>
+          <th style="padding: 3px 5px; text-align: center;">Van.</th>
+          <th style="padding: 3px 5px; text-align: center;">HAP.</th>
+          <th style="padding: 3px 5px; text-align: center;">Thr.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">AG News</td><td style="padding: 2px 5px; text-align: center;"><b>34.5</b></td><td style="padding: 2px 5px; text-align: center;">7.4</td><td style="padding: 2px 5px; text-align: center;">1.4</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Antonym</td><td style="padding: 2px 5px; text-align: center;">1.0</td><td style="padding: 2px 5px; text-align: center;">2.2</td><td style="padding: 2px 5px; text-align: center;"><b>7.6</b></td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Cap. Second Letter</td><td style="padding: 2px 5px; text-align: center;"><b>12.1</b></td><td style="padding: 2px 5px; text-align: center;">2.7</td><td style="padding: 2px 5px; text-align: center;">3.7</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">CommonsenseQA</td><td style="padding: 2px 5px; text-align: center;"><b>18.4</b></td><td style="padding: 2px 5px; text-align: center;">9.4</td><td style="padding: 2px 5px; text-align: center;">6.9</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Country-Capital</td><td style="padding: 2px 5px; text-align: center;">29.6</td><td style="padding: 2px 5px; text-align: center;"><b>42.3</b></td><td style="padding: 2px 5px; text-align: center;">29.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Cap. (Full Word)</td><td style="padding: 2px 5px; text-align: center;"><b>79.1</b></td><td style="padding: 2px 5px; text-align: center;">62.2</td><td style="padding: 2px 5px; text-align: center;">52.2</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Cap. First Letter</td><td style="padding: 2px 5px; text-align: center;">38.5</td><td style="padding: 2px 5px; text-align: center;"><b>68.6</b></td><td style="padding: 2px 5px; text-align: center;">28.7</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Cap. Last Letter</td><td style="padding: 2px 5px; text-align: center;"><b>9.7</b></td><td style="padding: 2px 5px; text-align: center;">3.4</td><td style="padding: 2px 5px; text-align: center;">3.9</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Country-Currency</td><td style="padding: 2px 5px; text-align: center;"><b>6.5</b></td><td style="padding: 2px 5px; text-align: center;">5.4</td><td style="padding: 2px 5px; text-align: center;">2.2</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Lower. First Letter</td><td style="padding: 2px 5px; text-align: center;"><b>71.4</b></td><td style="padding: 2px 5px; text-align: center;">69.4</td><td style="padding: 2px 5px; text-align: center;">58.1</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">National Parks</td><td style="padding: 2px 5px; text-align: center;">16.4</td><td style="padding: 2px 5px; text-align: center;"><b>21.7</b></td><td style="padding: 2px 5px; text-align: center;">17.1</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Next Cap. Letter</td><td style="padding: 2px 5px; text-align: center;"><b>6.4</b></td><td style="padding: 2px 5px; text-align: center;">6.0</td><td style="padding: 2px 5px; text-align: center;">4.7</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Landmark-Country</td><td style="padding: 2px 5px; text-align: center;">32.8</td><td style="padding: 2px 5px; text-align: center;"><b>36.5</b></td><td style="padding: 2px 5px; text-align: center;">22.0</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Lower. Last Letter</td><td style="padding: 2px 5px; text-align: center;">6.9</td><td style="padding: 2px 5px; text-align: center;"><b>7.2</b></td><td style="padding: 2px 5px; text-align: center;">3.3</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Next Item</td><td style="padding: 2px 5px; text-align: center;">10.7</td><td style="padding: 2px 5px; text-align: center;"><b>27.6</b></td><td style="padding: 2px 5px; text-align: center;">9.8</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Park-Country</td><td style="padding: 2px 5px; text-align: center;">12.2</td><td style="padding: 2px 5px; text-align: center;"><b>16.9</b></td><td style="padding: 2px 5px; text-align: center;">15.3</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Present-Past</td><td style="padding: 2px 5px; text-align: center;">54.6</td><td style="padding: 2px 5px; text-align: center;"><b>78.8</b></td><td style="padding: 2px 5px; text-align: center;">41.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Previous Item</td><td style="padding: 2px 5px; text-align: center;">5.3</td><td style="padding: 2px 5px; text-align: center;"><b>8.0</b></td><td style="padding: 2px 5px; text-align: center;">2.2</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Product-Company</td><td style="padding: 2px 5px; text-align: center;">20.5</td><td style="padding: 2px 5px; text-align: center;"><b>20.7</b></td><td style="padding: 2px 5px; text-align: center;">9.0</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Sentiment</td><td style="padding: 2px 5px; text-align: center;"><b>64.1</b></td><td style="padding: 2px 5px; text-align: center;">15.8</td><td style="padding: 2px 5px; text-align: center;">0.0</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Singular-Plural</td><td style="padding: 2px 5px; text-align: center;">62.0</td><td style="padding: 2px 5px; text-align: center;"><b>77.1</b></td><td style="padding: 2px 5px; text-align: center;">34.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Synonym</td><td style="padding: 2px 5px; text-align: center;">2.1</td><td style="padding: 2px 5px; text-align: center;">2.2</td><td style="padding: 2px 5px; text-align: center;"><b>3.8</b></td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Word Length</td><td style="padding: 2px 5px; text-align: center;"><b>8.1</b></td><td style="padding: 2px 5px; text-align: center;">6.9</td><td style="padding: 2px 5px; text-align: center;">1.2</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Person-Instrument</td><td style="padding: 2px 5px; text-align: center;"><b>23.7</b></td><td style="padding: 2px 5px; text-align: center;">1.4</td><td style="padding: 2px 5px; text-align: center;">1.4</td></tr>
+        <tr><td style="padding: 2px 5px;">Person-Occupation</td><td style="padding: 2px 5px; text-align: center;"><b>18.3</b></td><td style="padding: 2px 5px; text-align: center;">4.6</td><td style="padding: 2px 5px; text-align: center;">6.2</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Person-Sport</td><td style="padding: 2px 5px; text-align: center;">22.0</td><td style="padding: 2px 5px; text-align: center;"><b>27.4</b></td><td style="padding: 2px 5px; text-align: center;">0.0</td></tr>
+      </tbody>
+    </table>
+
+    <table style="font-size: 0.7em; border-collapse: collapse;">
+      <caption style="caption-side: top; text-align: left; margin-bottom: 10px;"><b>Abstractive ICL (5-Shot, No Label Overlap)</b></caption>
+      <thead>
+        <tr style="border-bottom: 2px solid #333;">
+          <th style="padding: 3px 5px; text-align: left;">Task</th>
+          <th style="padding: 3px 5px; text-align: center;">Van.</th>
+          <th style="padding: 3px 5px; text-align: center;">HAP.</th>
+          <th style="padding: 3px 5px; text-align: center;">Thr.</th>
+          <th style="padding: 3px 5px; border-left: 1px solid #ccc; text-align: left;">Task</th>
+          <th style="padding: 3px 5px; text-align: center;">Van.</th>
+          <th style="padding: 3px 5px; text-align: center;">HAP.</th>
+          <th style="padding: 3px 5px; text-align: center;">Thr.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">AG News</td><td style="padding: 2px 5px; text-align: center;">0.3</td><td style="padding: 2px 5px; text-align: center;"><b>7.8</b></td><td style="padding: 2px 5px; text-align: center;">3.7</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Antonym</td><td style="padding: 2px 5px; text-align: center;">0.8</td><td style="padding: 2px 5px; text-align: center;">2.5</td><td style="padding: 2px 5px; text-align: center;"><b>7.0</b></td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Cap. Second Letter</td><td style="padding: 2px 5px; text-align: center;">0.5</td><td style="padding: 2px 5px; text-align: center;">3.2</td><td style="padding: 2px 5px; text-align: center;"><b>7.6</b></td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">CommonsenseQA</td><td style="padding: 2px 5px; text-align: center;">12.0</td><td style="padding: 2px 5px; text-align: center;"><b>13.9</b></td><td style="padding: 2px 5px; text-align: center;">7.3</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Country-Capital</td><td style="padding: 2px 5px; text-align: center;">30.7</td><td style="padding: 2px 5px; text-align: center;"><b>42.3</b></td><td style="padding: 2px 5px; text-align: center;">29.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Cap. (Full Word)</td><td style="padding: 2px 5px; text-align: center;"><b>79.1</b></td><td style="padding: 2px 5px; text-align: center;">62.2</td><td style="padding: 2px 5px; text-align: center;">52.2</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Cap. First Letter</td><td style="padding: 2px 5px; text-align: center;">36.4</td><td style="padding: 2px 5px; text-align: center;"><b>73.6</b></td><td style="padding: 2px 5px; text-align: center;">31.2</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Cap. Last Letter</td><td style="padding: 2px 5px; text-align: center;">2.9</td><td style="padding: 2px 5px; text-align: center;">6.6</td><td style="padding: 2px 5px; text-align: center;"><b>8.2</b></td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Country-Currency</td><td style="padding: 2px 5px; text-align: center;"><b>4.3</b></td><td style="padding: 2px 5px; text-align: center;">4.3</td><td style="padding: 2px 5px; text-align: center;">3.2</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Lower. First Letter</td><td style="padding: 2px 5px; text-align: center;">73.3</td><td style="padding: 2px 5px; text-align: center;"><b>76.2</b></td><td style="padding: 2px 5px; text-align: center;">69.2</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">National Parks</td><td style="padding: 2px 5px; text-align: center;">15.3</td><td style="padding: 2px 5px; text-align: center;">22.6</td><td style="padding: 2px 5px; text-align: center;"><b>25.3</b></td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Next Cap. Letter</td><td style="padding: 2px 5px; text-align: center;">3.4</td><td style="padding: 2px 5px; text-align: center;"><b>8.6</b></td><td style="padding: 2px 5px; text-align: center;">6.3</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Landmark-Country</td><td style="padding: 2px 5px; text-align: center;">30.4</td><td style="padding: 2px 5px; text-align: center;"><b>38.4</b></td><td style="padding: 2px 5px; text-align: center;">26.1</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Lower. Last Letter</td><td style="padding: 2px 5px; text-align: center;">3.8</td><td style="padding: 2px 5px; text-align: center;"><b>10.0</b></td><td style="padding: 2px 5px; text-align: center;">5.2</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Next Item</td><td style="padding: 2px 5px; text-align: center;">12.0</td><td style="padding: 2px 5px; text-align: center;"><b>28.0</b></td><td style="padding: 2px 5px; text-align: center;">12.0</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Park-Country</td><td style="padding: 2px 5px; text-align: center;">10.7</td><td style="padding: 2px 5px; text-align: center;"><b>16.7</b></td><td style="padding: 2px 5px; text-align: center;">16.1</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Present-Past</td><td style="padding: 2px 5px; text-align: center;">54.6</td><td style="padding: 2px 5px; text-align: center;"><b>78.8</b></td><td style="padding: 2px 5px; text-align: center;">41.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Previous Item</td><td style="padding: 2px 5px; text-align: center;">5.3</td><td style="padding: 2px 5px; text-align: center;"><b>7.1</b></td><td style="padding: 2px 5px; text-align: center;">1.8</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Product-Company</td><td style="padding: 2px 5px; text-align: center;">15.9</td><td style="padding: 2px 5px; text-align: center;"><b>24.9</b></td><td style="padding: 2px 5px; text-align: center;">20.7</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Sentiment</td><td style="padding: 2px 5px; text-align: center;">2.8</td><td style="padding: 2px 5px; text-align: center;"><b>35.4</b></td><td style="padding: 2px 5px; text-align: center;">0.0</td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Singular-Plural</td><td style="padding: 2px 5px; text-align: center;">62.0</td><td style="padding: 2px 5px; text-align: center;"><b>77.1</b></td><td style="padding: 2px 5px; text-align: center;">34.6</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Synonym</td><td style="padding: 2px 5px; text-align: center;">1.6</td><td style="padding: 2px 5px; text-align: center;">2.0</td><td style="padding: 2px 5px; text-align: center;"><b>3.8</b></td></tr>
+        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 2px 5px;">Word Length</td><td style="padding: 2px 5px; text-align: center;">7.7</td><td style="padding: 2px 5px; text-align: center;"><b>14.9</b></td><td style="padding: 2px 5px; text-align: center;">2.0</td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Person-Instrument</td><td style="padding: 2px 5px; text-align: center;">0.2</td><td style="padding: 2px 5px; text-align: center;"><b>3.9</b></td><td style="padding: 2px 5px; text-align: center;">1.6</td></tr>
+        <tr><td style="padding: 2px 5px;">Person-Occupation</td><td style="padding: 2px 5px; text-align: center;">0.2</td><td style="padding: 2px 5px; text-align: center;">2.6</td><td style="padding: 2px 5px; text-align: center;"><b>7.8</b></td><td style="padding: 2px 5px; border-left: 1px solid #ccc;">Person-Sport</td><td style="padding: 2px 5px; text-align: center;">9.7</td><td style="padding: 2px 5px; text-align: center;"><b>44.7</b></td><td style="padding: 2px 5px; text-align: center;">2.5</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+  <figcaption style="margin-top: 15px;">
+    <b>Abstractive ICL Performance.</b> Bold indicates highest accuracy. Full results with confidence intervals and statistical significance tests are available in the paper.
+  </figcaption>
+  </center>
+</figure>   
+
+<p>
+We continue our evaluation with abstractive tasks, where the model needs to generate novel information not contained in the context. We evaluate on 26 abstractive tasks (e.g., Country-Capital task) and 8 word-level translation tasks.
+</p>
+
+<p>
+Our evaluations suggest that models trained with HAPAX preserve abstractive ICL capabilities, with HAPAX achieving <b>higher accuracy on 13 out of 21</b> tasks with statistically significant differences. When we control for label overlap (ensuring target answers don't appear in few-shot examples), the HAPAX model achieves higher accuracy on <b>24 out of 25 tasks</b>. If abstractive ICL capabilities were fundamentally dependent on induction heads and inductive copying capability, we would expect performance degradation across most tasks when inductive copying is substantially reduced. However, our results do not show such degradation. Despite receiving gradients from far fewer tokens, the HAPAX model preserves its abstractive ICL capabilities.
+
+</p>
+
+<h2>In-Context Learning Beyond N-gram Copying</h2>
+
+<p>
+We use the <b>token-loss difference</b> metric to understand general ICL capabilities. This metric is defined by the differences of the cross-entropy loss of arbitrary token positions, conventionally using the 500th and 50th token positions. Intuitively, token-loss difference measures improvement across increasing token positions. If the loss at token 500 is lower and TLD &gt; 0, it shows that the model's predictions improved with increasing context.
+</p>
+
+<p>
+Yin et al. (2025) provided evidence that the metric is strongly influenced by induction heads but does not correlate well with in-context learning task performance. Our results demonstrate that the sudden increase in token-loss difference metric for the vanilla model is indicative of the emergence of inductive copying capabilities, but lacks indicative power for the emergence of abstractive ICL capabilities.
+</p>
+
+<figure class="center_image" style="margin-top: 30px">
+  <center>
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <img src="images/paper/tld_non_extractive_1b.png" style="width:45%; min-width:300px;">
+      <img src="images/paper/tld_all_samples_1b.png" style="width:45%; min-width:300px;">
+    </div>
+  </center>
+  <figcaption>
+    <b>Token-Loss Difference Analysis.</b> (Left) On non-extractive samples only, HAPAX shows slightly <i>higher</i> TLD, suggesting better context use for non-copying instances. (Right) On all samples, HAPAX shows lower TLD due to reduced copying. The metric primarily captures copying gains, not abstractive ICL.
+  </figcaption>
+</figure>
+
+<p>
+To investigate this hypothesis further, we propose using samples where neither the 500th nor the 50th token can be predicted correctly with inductive copying. With this modification, we observe that, contrary to the regular token-loss difference metric, the HAPAX model has a slightly higher token-loss difference, which suggests that it can leverage context better for non-exact copying instances. We also observe that the model's ability to leverage context for non-exact matching tokens does not exhibit a phase shift but rather improves gradually across training steps.
+</p>
+
+<h2>Mechanistic Analysis of Induction Heads</h2>
+
+<figure class="center_image" style="margin-top: 30px">
+  <center><img src="images/paper/induction_scores_over_time_comparison.png" style="width:100%; max-width:900px"></center>
+  <figcaption>
+    <b>Prefix-Matching Scores Over Training.</b> Each line corresponds to one head; line opacity is proportional to the head's maximum score over training. Heads with peak score &lt; 0.1 are omitted for readability. The Vanilla model shows many heads that peak early and then decay, whereas the HAPAX variants exhibit fewer rise-then-decay trajectories and fewer heads that reach high prefix-matching scores overall.
+  </figcaption>
+</figure>
+
+<figure class="center_image" style="margin-top: 30px">
+  <center>
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <img src="images/paper/prefix_matching_vs_induction_masked_bigram_loss_1b-1.png" style="width:45%; min-width:300px;">
+      <img src="images/paper/masked_bigram_loss_1b_head_scores_prob_diff-1.png" style="width:45%; min-width:300px;">
+    </div>
+  </center>
+  <figcaption>
+    <b>Influence of Individual Attention Heads for Inductive Copying (HAPAX).</b> Different from the vanilla model, many of the top 10 prefix-matching heads negatively influence copying.
+  </figcaption>
+</figure>
+
+<p>
+With inductive copying suppressed, we next investigate mechanistically how induction heads are affected. We analyze the attention patterns of attention heads for the vanilla and HAPAX models using the random repetition sequence. HAPAX has fewer attention heads that strongly display the prefix-matching pattern commonly associated with induction heads. 
+</p>
+
+<p>
+In the vanilla model, the top 10 prefix-matching heads achieve an average score of 61%, whereas in HAPAX this average drops to 40% and 36% for Thresholded-HAPAX. We observe that the vanilla model contains many heads whose prefix-matching scores spike early in training and then decay, while the Hapax variants show fewer rise-then-decay trajectories and fewer heads that ever reach high prefix-matching scores. 
+</p>
+
+<p>
+Using ablation studies, we analyze the causal impact of each individual attention head. We observe that out of the top 10 prefix matching heads, 6 of the heads negatively influence the probability assigned to the correct token, meaning that they functionally behave closer to an anti-induction head. Despite many of the top 10 prefix-matching heads negatively influencing prediction, abstractive ICL capabilities remain intact. This suggests that learning abstractive ICL is robust against the suppression of inductive copying.
+</p>
+
+<h2>Cross-Checkpoint Patching Experiments</h2>
+
+<p>
+With HAPAX training, we obtained a model that does not benefit from repetition. However, our data distribution plausibly does not imply anything about the existence of previous token heads, and they might still be helpful for tasks such as detokenization. In this section, we conduct experiments to ascertain the influence of previous token heads on the formation of induction heads.
+</p>
+
+<p>
+If models must develop previous token heads for reasons other than learning induction circuits, heads in later layers may naturally develop prefix-matching attention patterns as they attend to this information. We find that even <i>randomly initialized</i> heads at later layers will attend to previous token information, suggesting that prefix-matching patterns can form as a direct result of the presence of previous token information.
+</p>
+
+<figure class="center_image" style="margin-top: 30px">
+  <center><img src="images/paper/random_init_patching.png" style="width:500px; max-width:600px"></center>
+  <figcaption>
+    <b>Cross-Checkpoint Patching.</b> Induction head scores of the randomly initialized vanilla model before and after patching layer L4 of the vanilla model at step 5000, which contains the first previous-token heads. Patching previous token head outputs into a random model causes later layers to exhibit prefix-matching patterns, even without any training. Heads marked with red dots are the top three prefix-matching heads which also rank among the top prefix-matching heads in the vanilla model's final checkpoint.
+  </figcaption>
+</figure>
+
+<p>
+These results suggest that induction head-like attention patterns can form quite easily once previous token information is present, possibly explaining how the HAPAX model still displays such attention patterns despite never being trained on token positions that can be predicted by induction heads.
+</p>
+
+<h2>Key Takeaways</h2>
+
+<p>
+Our findings suggest that <b>abstractive ICL capabilities follow more independent developmental pathways from induction heads than previously hypothesized</b>. While prior work proposed that induction heads underlie a wide range of ICL capabilities, HAPAX models preserve abstractive ICL despite significantly reduced inductive copying and weaker induction heads. This provides new insight into the training dynamics of transformers: the mechanisms underlying different ICL capabilities are less tightly coupled than the correlated emergence of these abilities would suggest.
+</p>
+
 <h2>How to cite</h2>
 
-<p>The paper can be cited as follows.
-</p>
+<p>The paper can be cited as follows.</p>
 
 <div class="card">
 <h3 class="card-header">bibliography</h3>
 <div class="card-block">
 <p style="text-indent: -3em; margin-left: 3em;" class="card-text clickselect">
-Rohit Gandikota, Hadas Orgad, Yonatan Belinkov, Joanna Materzy&#324;ska, David Bau. "<em>Unified Concept Editing in Diffusion Models.</em>" in Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2024.</nobr>
+Kerem Sahin, Sheridan Feucht, Adam Belfki, Jannik Brinkmann, Aaron Mueller, David Bau, Chris Wendler. "<em>In-Context Learning Without Copying.</em>" arXiv preprint arXiv:2511.05743, (2025).
 </p>
 </div>
 <h3 class="card-header">bibtex</h3>
 <div class="card-block">
 <pre class="card-text clickselect">
-@inproceedings{gandikota2024unified,
-  title={Unified Concept Editing in Diffusion Models},
-  author={Gandikota, Rohit and Orgad, Hadas and Belinkov, Yonatan and Materzy{\'n}ska, Joanna and Bau, David},
-  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
-  year={2024},
-  note={arXiv:2308.14761}
+@misc{sahin2025incontextlearningcopying,
+      title={In-Context Learning Without Copying}, 
+      author={Kerem Sahin and Sheridan Feucht and Adam Belfki and Jannik Brinkmann and Aaron Mueller and David Bau and Chris Wendler},
+      year={2025},
+      eprint={2511.05743},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2511.05743}, 
 }
 </pre>
-
 </div> 
 </div>
-</p>
 
 </div>
 </div><!--row -->
@@ -269,4 +422,3 @@ $(document).on('click', '.clickselect', function(ev) {
 });
 </script>
 </html>
-
