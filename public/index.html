@@ -120,7 +120,7 @@ gtag('js', new Date()); gtag('config', 'G-FD12LWN557');
 <b>Induction heads</b> are attention heads that perform inductive copying by matching patterns from earlier context and copying their continuations verbatim. As models develop induction heads, they experience a sharp drop in training loss, a phenomenon cited as evidence that induction heads may underlie a wide range of in-context learning (ICL) capabilities. 
 </p>
 <p>
-In this work, we investigate whether induction heads are a necessary building block for learning <b>abstractive ICL capabilities</b> (i.e., tasks where the answer is not contained in the input context), or whether such capabilities can emerge independently. We propose <b>HAPAX</b>, a training regime that omits the loss contribution of tokens predictable by induction heads. Despite a significant reduction in inductive copying, abstractive ICL capabilities are preserved, with the model achieving higher accuracy than the vanilla model on 13 out of 21 tasks, even though 31.7% of tokens are omitted from the loss. Furthermore, our model achieves lower loss values on token positions that induction heads cannot predict. Mechanistic analysis shows that models trained with Hapax develop fewer and weaker induction heads despite preserving abstractive ICL capabilities. Our findings suggest that the developmental link between induction heads and abstractive ICL capabilities is <b>weaker than previously hypothesized</b>.
+In this work, we investigate whether induction heads are necessary for the emergence of abstractive ICL capabilities, i.e., tasks where answers aren't contained in the input. We propose HAPAX, a training regime that omits loss contributions from tokens predictable by induction heads. Despite significantly reduced inductive copying, abstractive ICL is preserved: our model achieves higher scores than the vanilla model on 13 of 21 tasks while omitting 31.7% of tokens from the loss. Mechanistic analysis confirms that HAPAX models develop fewer and weaker induction heads yet retain abstractive capabilities. Our findings suggest the link between induction heads and the emergence of abstractive ICL is <b>weaker than previously hypothesized</b>.
 </p>
 </div><!--card-block-->
 </div><!--card-->
@@ -410,6 +410,7 @@ Kerem Sahin, Sheridan Feucht, Adam Belfki, Jannik Brinkmann, Aaron Mueller, Davi
     </div>
   </div>
 </footer>
+
 
 </body>
 <script>
