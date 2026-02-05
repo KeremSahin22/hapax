@@ -120,7 +120,7 @@ gtag('js', new Date()); gtag('config', 'G-FD12LWN557');
 <b>Induction heads</b> are attention heads that perform inductive copying by matching patterns from earlier context and copying their continuations verbatim. As models develop induction heads, they experience a sharp drop in training loss, a phenomenon cited as evidence that induction heads may underlie a wide range of in-context learning (ICL) capabilities. 
 </p>
 <p>
-In this work, we investigate whether induction heads are a necessary building block for learning <b>abstractive ICL capabilities</b> (i.e., tasks where the answer is not contained in the input context), or whether such capabilities can emerge independently. We propose <b>HAPAX</b>, a training regime that omits the loss contribution of tokens predictable by induction heads. Despite a significant reduction in inductive copying, abstractive ICL capabilities are preserved, with the model achieving higher accuracy than the vanilla model on 13 out of 21 tasks, even though 31.7% of tokens are omitted from the loss. Furthermore, our model achieves lower loss values on token positions that induction heads cannot predict. Mechanistic analysis shows that models trained with Hapax develop fewer and weaker induction heads despite preserving abstractive ICL capabilities. Our findings suggest that the developmental link between induction heads and abstractive ICL capabilities is <b>weaker than previously hypothesized</b>.
+In this work, we investigate whether induction heads are necessary for the emergence of abstractive ICL capabilities, i.e., tasks where answers aren't contained in the input. We propose HAPAX, a training regime that omits loss contributions from tokens predictable by induction heads. Despite significantly reduced inductive copying, abstractive ICL is preserved: our model achieves higher scores than the vanilla model on 13 of 21 tasks while omitting 31.7% of tokens from the loss. Mechanistic analysis confirms that HAPAX models develop fewer and weaker induction heads yet retain abstractive capabilities. Our findings suggest the link between induction heads and the emergence of abstractive ICL is <b>weaker than previously hypothesized</b>.
 </p>
 </div><!--card-block-->
 </div><!--card-->
@@ -130,7 +130,7 @@ In this work, we investigate whether induction heads are a necessary building bl
 <div class="row">
 <div class="col">
 
-<h2>Background: The Induction Circuit</h2>
+<h2>Induction Circuit</h2>
 
 <figure class="center_image" style="margin-top: 30px">
   <center><img src="images/paper/induction_circuit.png" style="width:100%; max-width:900px"></center>
@@ -158,7 +158,7 @@ Formally, given input tokens (x<sub>1</sub>, ..., x<sub>j</sub>), induction circ
 Olsson et al. (2022) hypothesized that these circuits underlie a wide range of in-context learning capabilities. However, subsequent work has demonstrated that induction heads operate in parallel with different components that are more causally important for performance on various ICL tasks. Yin et al. (2025) provide correlational evidence that induction heads transform into other ICL-related heads during training, but it is not clear whether abstractive ICL capabilities can emerge independently from induction heads. This motivates our central question: <b>are induction heads a necessary building block for learning abstractive ICL capabilities, or can such capabilities emerge independently?</b>
 </p>
 
-<h2>The HAPAX Training Regime</h2>
+<h2>HAPAX Training Regime</h2>
 
 <figure class="center_image" style="margin-top: 30px">
   <center><img src="images/paper/bigram_loss_masking.png" style="width:600px; max-width:700px"></center>
@@ -345,7 +345,7 @@ In the vanilla model, the top 10 prefix-matching heads achieve an average score 
 Using ablation studies, we analyze the causal impact of each individual attention head. We observe that out of the top 10 prefix matching heads, 6 of the heads negatively influence the probability assigned to the correct token, meaning that they functionally behave closer to an anti-induction head. Despite many of the top 10 prefix-matching heads negatively influencing prediction, abstractive ICL capabilities remain intact. This suggests that learning abstractive ICL is robust against the suppression of inductive copying.
 </p>
 
-<h2>Cross-Checkpoint Patching Experiments</h2>
+<h2>Origins of Prefix-Matching Patterns</h2>
 
 <p>
 With HAPAX training, we obtained a model that does not benefit from repetition. However, our data distribution plausibly does not imply anything about the existence of previous token heads, and they might still be helpful for tasks such as detokenization. In this section, we conduct experiments to ascertain the influence of previous token heads on the formation of induction heads.
