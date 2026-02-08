@@ -44,26 +44,6 @@
 :target {
   background-color: yellow;
 }
-.citation {
-  margin-bottom: 15px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-.citation img {
-  float: left;
-  width: 150px;
-  margin-right: 15px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-}
-.citation a {
-  font-weight: bold;
-}
-.citation::after {
-  content: "";
-  display: table;
-  clear: both;
-}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD12LWN557"></script>
 <script>
@@ -111,16 +91,17 @@ gtag('js', new Date()); gtag('config', 'G-FD12LWN557');
 <p>
 <a href="https://arxiv.org/abs/2511.05743" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/paper-thumb.png" style="border:1px solid; margin: 0 38px;" alt="ArXiv Preprint thumbnail" data-nothumb=""><br>ArXiv<br>Preprint</a>
 <a href="https://github.com/KeremSahin22/icl-without-copying" class="d-inline-block p-3 align-top" target="_blank"><img height="100" width="78" src="images/code-thumb.png" style="border:1px solid; margin: 0 38px;" alt="Github code thumbnail" data-nothumb=""><br>Source Code<br>Github</a>
+<a href="https://huggingface.co/KeremSahin2210/models" class="d-inline-block p-3 align-top" target="_blank">
+  <img height="100" width="78" src="images/model.png" style="border:1px solid; margin: 0 38px;" alt="Model weights thumbnail" data-nothumb="">
+  <br>Model<br>Weights
+</a>
 </p>
 
 <div class="card" style="max-width: 1020px;">
 <div class="card-block">
-<h3>Are Induction Heads Necessary for In-Context Learning?</h3>
+<h3>Beyond Copying: Are Induction Heads Needed for ICL to Emerge?</h3>
 <p>
-<b>Induction heads</b> are attention heads that perform inductive copying by matching patterns from earlier context and copying their continuations verbatim. As models develop induction heads, they experience a sharp drop in training loss, a phenomenon cited as evidence that induction heads may underlie a wide range of in-context learning (ICL) capabilities. 
-</p>
-<p>
-In this work, we investigate whether induction heads are necessary for the emergence of abstractive ICL capabilities, i.e., tasks where answers aren't contained in the input. We propose HAPAX, a training regime that omits loss contributions from tokens predictable by induction heads. Despite significantly reduced inductive copying, abstractive ICL is preserved: our model achieves higher scores than the vanilla model on 13 of 21 tasks while omitting 31.7% of tokens from the loss. Mechanistic analysis confirms that HAPAX models develop fewer and weaker induction heads yet retain abstractive capabilities. Our findings suggest the link between induction heads and the emergence of abstractive ICL is <b>weaker than previously hypothesized</b>.
+Induction heads are attention heads that copy patterns from earlier context, and their emergence during training coincides with a sharp drop in loss, a phenomenon widely cited as evidence that induction heads underlie in-context learning (ICL) more broadly. To test this, we introduce HAPAX, a training regime that omits loss on tokens predictable by induction heads. Despite developing fewer and weaker induction heads without the characteristic loss drop, abstractive ICL capabilities, tasks where answers are not contained in the input, are largely preserved. Our findings suggest that the link between induction heads and the emergence of abstractive ICL is <b>weaker than previously hypothesized</b>.
 </p>
 </div><!--card-block-->
 </div><!--card-->
@@ -370,6 +351,61 @@ These results suggest that induction head-like attention patterns can form quite
 
 <p>
 Our findings suggest that <b>abstractive ICL capabilities follow more independent developmental pathways from induction heads than previously hypothesized</b>. While prior work proposed that induction heads underlie a wide range of ICL capabilities, HAPAX models preserve abstractive ICL despite significantly reduced inductive copying and weaker induction heads. This provides new insight into the training dynamics of transformers: the mechanisms underlying different ICL capabilities are less tightly coupled than the correlated emergence of these abilities would suggest.
+</p>
+
+<h2 id="related-work">Related Work</h2>
+<p>
+Our work builds on research investigating induction heads, in-context learning mechanisms, training dynamics, and the role of repetition in language models.
+</p>
+
+<h3>Attention Heads and In-Context Learning</h3>
+
+<p class="citation"><a href="https://transformer-circuits.pub/2021/framework/index.html"><img src="images/related_work/elhage2021.png" alt="elhage-2021">Nelson Elhage, Neel Nanda, Catherine Olsson, et al. A Mathematical Framework for Transformer Circuits. Transformer Circuits Thread, 2021.</a><br>
+    <b>Notes:</b> The authors introduce a mathematical framework for understanding transformer circuits and identify induction circuits responsible for inductive copying, where LLMs match patterns and copy them from earlier context.
+</p>
+
+<p class="citation"><a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html"><img src="images/related_work/olsson2022.png" alt="olsson-2022">Catherine Olsson, Nelson Elhage, Neel Nanda, et al. In-context Learning and Induction Heads. Transformer Circuits Thread, 2022.</a><br>
+    <b>Notes:</b> The first mechanistic analysis of ICL capabilities in LLMs. The authors find that the development of induction circuits is associated with rapid phase transitions as the model displays prefix-matching and inductive copying capabilities, with a general increase in ICL capabilities following later in training. They hypothesize that induction heads underlie a wide range of ICL capabilities and observe that some heads are also involved in "fuzzy" copying based on semantic similarity.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=C7XmEByCFv"><img src="images/related_work/yin2025.png" alt="yin-2025">Kayo Yin, Jacob Steinhardt. Which Attention Heads Matter for In-Context Learning? ICML, 2025.</a><br>
+    <b>Notes:</b> The authors show that ablation of traditional induction heads does not damage ICL as much as ablation of function vector heads. They also observe that certain heads displaying high prefix-matching scores early in training later transform into function vector heads, suggesting a potential developmental link between induction heads and other ICL-related heads.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=AwyxtyMwaG"><img src="images/related_work/todd2024.png" alt="todd-2024">Eric Todd, Millicent Li, Arnab Sen Sharma, Aaron Mueller, Byron C. Wallace, David Bau. Function Vectors in Large Language Models. ICLR, 2024.</a><br>
+    <b>Notes:</b> The authors identify function vector heads that trigger ICL tasks and introduce extractive tasks (where the model must directly extract the answer from the input) and abstractive tasks (which require generating new answers rather than copying) that are used within our work to analyze different ICL capabilities.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=bNTrKqqnG9"><img src="images/related_work/feucht2025.png" alt="feucht-2025">Sheridan Feucht, Eric Todd, Byron C. Wallace, David Bau. The Dual-Route Model of Induction. CoLM, 2025.</a><br>
+    <b>Notes:</b> The authors show that models contain separate concept induction circuits that are causally more important than traditional induction circuits for "fuzzy" copying tasks (e.g., translation).
+</p>
+
+<h3>Training Dynamics and Induction Heads</h3>
+
+<p class="citation"><a href="https://dl.acm.org/doi/10.5555/3600270.3601641"><img src="images/related_work/chan2022.png" alt="chan-2022">Stephanie C.Y. Chan, Adam Santoro, Andrew K. Lampinen, Jane X. Wang, Aaditya K. Singh, Pierre H. Richemond, James L. McClelland, Felix Hill. Data Distributional Properties Drive Emergent In-Context Learning in Transformers. NeurIPS, 2022.</a><br>
+    <b>Notes:</b> The authors identify data distributional properties that drive the emergence of in-context learning, showing how skewed Zipfian distributions lead to the emergence of ICL. Importantly, they demonstrate that Zipfian distributions enable both in-context and weight-based learning to co-exist, resolving an initial trade-off between the two learning modes.
+</p>
+
+<p class="citation"><a href="https://arxiv.org/abs/2404.07129"><img src="images/related_work/singh2024.png" alt="singh-2024">Aaditya K. Singh, Ted Moskovitz, Felix Hill, Stephanie C.Y. Chan, Andrew M. Saxe. What Needs to Go Right for an Induction Head? A Mechanistic Study of In-Context Learning Circuits and Their Formation. ICML, 2024.</a><br>
+    <b>Notes:</b> The authors use clamping to study subcomponents of induction circuits and their effect on phase changes. Using an optogenetics-inspired causal framework, they identify three underlying subcircuits that interact to drive induction head formation.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=Xw01vF13aV"><img src="images/related_work/minegishi2025.png" alt="minegishi-2025">Gouki Minegishi, Hiroki Furuta, Shohei Taniguchi, Yusuke Iwasawa, Yutaka Matsuo. Beyond Induction Heads: In-Context Meta Learning Induces Multi-Phase Circuit Emergence. ICML, 2025.</a><br>
+    <b>Notes:</b> The authors study a meta-learning setting to investigate mechanisms in non-exact copying scenarios. They find that this meta-learning ability emerges in multiple training phases, with a different circuit appearing in each phase rather than a single induction-head transition.
+</p>
+
+<h3>Loss Masking and Repetition</h3>
+
+<p class="citation"><a href="https://openreview.net/forum?id=jMhRbV47pS"><img src="images/related_work/zucchet2025.png" alt="zucchet-2025">Nicolas Zucchet, Francesco D'Angelo, Andrew Kyle Lampinen, Stephanie C.Y. Chan. The Emergence of Sparse Attention: Impact of Data Distribution and Benefits of Repetition. NeurIPS, 2025.</a><br>
+    <b>Notes:</b> The authors analyze how training data repetition speeds up emergent behavior in language models, showing the importance of repetition in the data distribution for emergent behavior.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=DylSyAfmWs"><img src="images/related_work/hans2024.png" alt="hans-2024">Abhimanyu Hans, John Kirchenbauer, Yuxin Wen, Neel Jain, Hamid Kazemi, Prajwal Singhania, Siddharth Singh, Gowthami Somepalli, Jonas Geiping, Abhinav Bhatele, Tom Goldstein. Be like a Goldfish, Don't Memorize! Mitigating Memorization in Generative LLMs. NeurIPS, 2024.</a><br>
+    <b>Notes:</b> The authors incorporate loss masking strategies to prevent memorization of private information, excluding the loss contributions of certain tokens.
+</p>
+
+<p class="citation"><a href="https://openreview.net/forum?id=SJeYe0NtvH"><img src="images/related_work/welleck2020.png" alt="welleck-2020">Sean Welleck, Ilia Kulikov, Stephen Roller, Emily Dinan, Kyunghyun Cho, Jason Weston. Neural Text Generation With Unlikelihood Training. ICLR, 2020.</a><br>
+    <b>Notes:</b> The authors present unlikelihood loss training to mitigate repetitions in the model. They observe that the resulting models give less repetitive, less dull text while maintaining perplexity, giving superior generations.
 </p>
 
 <h2>How to cite</h2>
